@@ -22,18 +22,6 @@ int maxSubArraySum(vector<int> &a, int size)
 	return max_so_far;
 }
 
-long long power(long long a, long long b)
-{
-    long long result = 1;
-    while (b) {
-        if (b & 1)
-            result = (result * a) % mod;
-        a = (a * a) % mod;
-        b >>= 1;
-    }
-    return result;
-}
-
 int32_t main(){
 	fast_io;
 	int t;
