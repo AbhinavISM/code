@@ -46,6 +46,9 @@ for(int i = 0; i<m; i++){
 
 // BFS
 //dis for all source nodes are set to zero already
+queue<int> q;
+vector<int> dis(n,INT_MAX);
+q.push(src); dis[src] = 0;
 while(!q.empty()){
     int node = q.front();
     q.pop();
@@ -59,6 +62,8 @@ while(!q.empty()){
 
 //TOPO SORT (Its just dfs if you remove the topo vector)
 //reverse the topo vector after calling function
+vector<bool> vis(n,false);
+vector<int> topo;
 void toposort(vector<bool> &vis, vector<int> &topo, vector<vector<int>> &adj, int node){
     vis[node] = true;
     for(int child : adj[node]){
@@ -217,7 +222,7 @@ int32_t main(){
 
 // BINARY LIFTING QUERIES (kth parent queries)
 // -> COMPANY QUERIES 1
-// LCA QUERIES
+// LCA QUERIES (O(logn*logn)) and (O(logn))
 // -> COMPANY QUERIES 2
 // DISTANCE BTW NODES QUERIES
 // -> DISTANCE QUERIES

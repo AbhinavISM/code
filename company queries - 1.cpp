@@ -7,7 +7,7 @@
 using namespace std;
 
 void binlift_dfs(vector<vector<int>> &adj, vector<vector<int>> &binlift,
-	int x, int par, int node, int src){
+	int x, int par, int node){
 	// we dont need vis array as it is a tree and we have immediate parent(p)
 		binlift[node][0] = par;
 		for(int i = 1; i<=x; i++){
@@ -19,7 +19,7 @@ void binlift_dfs(vector<vector<int>> &adj, vector<vector<int>> &binlift,
 		}
 	for(int child : adj[node]){
 		if(child!=par){
-			binlift_dfs(adj,binlift,x,node,child,src);
+			binlift_dfs(adj,binlift,x,node,child);
 		}
 	}
 }
@@ -55,7 +55,7 @@ int32_t main(){
 
 	vector<vector<int>> binlift(n+1,vector<int>(x+1,-1));
 
-	binlift_dfs(adj,binlift,x,-1,1,1);
+	binlift_dfs(adj,binlift,x,-1,1);
 
 	while(q--){
 		int s,k;

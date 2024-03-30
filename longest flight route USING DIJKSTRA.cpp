@@ -19,15 +19,15 @@ int32_t main(){
 	vector<int> cost(n+1,0);
 	cost[1] = 1;
  
-	queue<int> pq;
-	pq.push(1);
+	priority_queue<pair<int,int>, vector<pair<int,int>>> pq;
+	pq.push({1,1});
 	while(!pq.empty()){
-		int node = pq.front();
+		int node = pq.top().second;
 		pq.pop();
 		for(int child : adj[node]){
 			if(cost[node] + 1 > cost[child]){
 				cost[child] = cost[node] + 1;
-				pq.push(child);
+				pq.push({cost[child], child});
 				parent[child] = node;
 			}
 		}
