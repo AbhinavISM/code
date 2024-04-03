@@ -7,16 +7,6 @@
 using namespace std;
 
 int mod = 1000000007;
-void toposort(vector<bool> &vis, vector<int> &topo, vector<vector<int>> &adj, int node){
-    vis[node] = true;
-    for(int child : adj[node]){
-        if(!vis[child]){
-            toposort(vis,topo,adj,child);
-        }
-    }
-
-    topo.push_back(node);
-}
 
 void dfs(vector<vector<int>> &adj, vector<vector<int>> &dp, int node, int par){
 	if(dp[node][0]!=-1&&dp[node][1]!=-1){
