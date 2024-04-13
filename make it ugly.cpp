@@ -11,51 +11,37 @@ int32_t main(){
 	int t;
 	cin>>t;
 	while(t--){
-	int n,k;
-	cin>>n>>k;
+	int n;
+	cin>>n;
 	vector<int> a(n,0);
 	for(int i = 0; i<n; i++){
 		cin>>a[i];
 	}
+	bool huh = true;
+	for(int i = 1; i<n; i++){
+		if(a[i]!=a[i-1]) huh = false;
+	}
+	if(huh) {
+		cout<<-1<<"\n";
+		continue;
+	}
+	if(a[0]!=a[n-1]){
+		cout<<0<<"\n";
+		continue;
+	}
+	int ans = INT_MAX;
 	int i = 0;
-	int j = n-1;
-	int ans = 0;
-	while(k>0&&i!=j){
-		if(a[i]<=a[j]){
-			if(k>= a[i] + a[i] -1){
-				k -= (a[i] + a[i] -1);
-				a[j] -= (a[i]-1);
-				a[i] = 0;
-				ans++;
-				i++;
-				if(k>=1) {
-					a[j] -= 1;
-					if(a[j]==0){
-						ans++;
-						j--;
-					}
-					k--;
-				}
-			} else {
-				k = 0;
-			}
+	int curr = 0;
+	while(i<n){
+		if(a[i]==a[0]){
+			curr++;
 		} else {
-			if(k>=2*a[j]){
-				k -= 2*a[j];
-				a[i] -= a[j];
-				a[j] = 0;
-				ans++;
-				j--;
-			} else {
-				k = 0;
-			}
+			ans = min(curr, ans);
+			curr = 0;
 		}
+		i++;
 	}
-	if(i==j&&k>0){
-		if(k>=a[i]){
-			ans++;
-		}
-	}
+	ans = min(curr, ans);
 	cout<<ans<<"\n";
 }
 	return 0;
