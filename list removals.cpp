@@ -6,17 +6,17 @@
 #define peek(v) for(auto x:v) cout<<x<<" ";cout<<"\n";
 #define dpeek(v) for(vector<int> i : v) {for(int j : i){ cout<<j<<" ";} cout<<"\n";}
 using namespace std;
-void update(vector<int> &BIT, int i, int n, int val){
-	while(i<=n) {
-		BIT[i] += val;
-		i += (i^(-i));
+void update(vector<int> &BIT, int idx, int val, int n){
+	while(idx<=n){
+		BIT[idx] += val;
+		idx += ((idx)&(-idx));
 	}
 }
-int query(vector<int> &BIT, int i){
+int prefix(vector<int> &BIT, int idx){
 	int ans = 0;
-	while(i>0) {
-		ans += BIT[i];
-		i -= (i^(-i));
+	while(idx>0){
+		ans += BIT[idx];
+		idx -= ((idx)&(-idx));
 	}
 	return ans;
 }
@@ -24,27 +24,31 @@ int32_t main(){
 	fast_io;
 	int n;
 	cin>>n;
-	int t;
-	cin>>t;
+	int t = n;
 	vector<int> a(n+1,0);
 	vector<int> BIT(n+1,0);
 	for(int i = 1; i<=n; i++){
+		update(BIT, i, 1, n);
 		cin>>a[i];
-		update(BIT, i, n, a[i]);
 	}
 	while(t--){
-		int q;
-		cin>>q;
-		if(q==1) {
-			int a,b,u;
-			cin>>a>>b>>u;
-			update(BIT, a, n, u);
-			update(BIT, b, n, -u);
+	int p;
+	cin>>p;
+	int lo = 1;
+	int hi = n;
+	while(hi>=lo){
+		int mid = lo + (hi-lo)/2;
+		if(prefix(BIT, mid)==p&&a[mid]!=0){
+			cout<<a[mid]<<" ";
+			a[mid] = 0;
+			update(BIT, mid, -1, n);
+			break;
+		} else if(prefix(BIT, mid)>=p){
+			hi = mid - 1;
 		} else {
-			int k;
-			cin>>k;
-			cout<<query(BIT, k)<<"\n";
+			lo = mid + 1;
 		}
+	}
 }
 	return 0;
 }

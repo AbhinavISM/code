@@ -6,45 +6,42 @@
 #define peek(v) for(auto x:v) cout<<x<<" ";cout<<"\n";
 #define dpeek(v) for(vector<int> i : v) {for(int j : i){ cout<<j<<" ";} cout<<"\n";}
 using namespace std;
-void update(vector<int> &BIT, int i, int n, int val){
-	while(i<=n) {
-		BIT[i] += val;
-		i += (i^(-i));
+void update(vector<int> &BIT, int idx, int val, int n){
+	while(idx<=n){
+		BIT[idx] += val;
+		idx += ((idx)&(-idx));
 	}
 }
-int query(vector<int> &BIT, int i){
+int prefix(vector<int> &BIT, int idx){
 	int ans = 0;
-	while(i>0) {
-		ans += BIT[i];
-		i -= (i^(-i));
+	while(idx>0){
+		ans += BIT[idx];
+		idx -= ((idx)&(-idx));
 	}
 	return ans;
 }
 int32_t main(){
 	fast_io;
-	int n;
-	cin>>n;
 	int t;
 	cin>>t;
+	while(t--){
+
+	int n;
+	cin>>n;
 	vector<int> a(n+1,0);
-	vector<int> BIT(n+1,0);
 	for(int i = 1; i<=n; i++){
 		cin>>a[i];
-		update(BIT, i, n, a[i]);
 	}
-	while(t--){
-		int q;
-		cin>>q;
-		if(q==1) {
-			int a,b,u;
-			cin>>a>>b>>u;
-			update(BIT, a, n, u);
-			update(BIT, b, n, -u);
-		} else {
-			int k;
-			cin>>k;
-			cout<<query(BIT, k)<<"\n";
-		}
+
+	vector<int> BIT(10000001,0);
+	vector<int> f(10000001,0);
+	int ans = 0;
+	for(int i = 1; i<=n; i++){
+		f[a[i]]++;
+		update(BIT, a[i], 1, 10000001);
+		ans += (prefix(BIT, 10000001) - prefix(BIT, a[i]));
+	}
+	cout<<ans<<"\n";
 }
 	return 0;
 }

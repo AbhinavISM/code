@@ -16,45 +16,26 @@ int32_t main(){
 	for(int i = 1; i<=n; i++){
 		cin>>a[i];
 	}
-	vector<vector<int>> sparse(n+1, vector<int>(25,0));
+	vector<vector<int>> sparse(n+1, vector<int>(25,INT64_MAX));
 	for(int i = 1; i<=n; i++){
 		sparse[i][0] = a[i];
 	}
 	for(int i = n; i>=1; i--){
 		for(int j = 1; j<25; j++){
-			if(i+(1<<j)-1<=n) sparse[i][j] = sparse[i][j-1] + sparse[i+(1<<(j-1))][j-1];
+			if(i+(1<<j)-1<=n) sparse[i][j] = min(sparse[i][j-1], sparse[i + (1<<(j-1))][j-1]);
 		}
 	}
 	// dpeek(sparse)
+	vector<int> logs(n+1,0);
+	for(int i = 2; i<=n; i++){
+		logs[i] = logs[i/2] + 1;
+	}
 	while(t--){
 	int i,j;
 	cin>>i>>j;
-
-	//BOTH WAYS ARE ABSOLUTELY CORRECT!!!
-
-	//way 1
 	int len = j-i+1;
-	int ans = 0;
-	for(int k = 0; k<25; k++){
-		if(len&(1<<k)) {
-			ans += sparse[i][k];
-			i += (1<<k);
-		}
-	}
+	int ans = min(sparse[i][logs[len]], sparse[j - (1<<(logs[len])) + 1][logs[len]]);
 	cout<<ans<<"\n";
-
-	//way 2
-	int sum = 0;
-	int MAXK = 24;
-	for(int k= MAXK; k>=0; k--)
-	{ 
-	    if ( (1<<k) <= j - i + 1 )
-	    {
-	        sum += sparse[i][k];
-	        i += 1<<k;
-	    }
-	}
-	cout<<sum<<"\n";
 }
 	return 0;
 }

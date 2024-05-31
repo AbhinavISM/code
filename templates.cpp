@@ -228,3 +228,4 @@ int32_t main(){
 // -> DISTANCE QUERIES
 
 // SPARSE TABLE RANGE SUM (SAME AS BINARY LIFTING) (SEARCH THIS NAME!)
+// BIT / Fenwick Tree (dynamic range sum queries) (SEARCH THIS NAME!)
