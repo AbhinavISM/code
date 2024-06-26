@@ -29,11 +29,9 @@ int32_t main(){
 		}
 		vis[node] = true;
 		for(auto it : adj[node]){
-			if(cost[node] + it.first < cost[it.second]){
+			if(!vis[it.second]&&cost[node] + it.first < cost[it.second]){
 				cost[it.second] = cost[node] + it.first;
-				if(!vis[it.second]){
-					pq.push({cost[it.second], it.second});
-				}
+				pq.push({cost[it.second], it.second});
 			}
 		}
 	}

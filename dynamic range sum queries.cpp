@@ -24,6 +24,8 @@ void update(vector<int> &BIT, int idx, int val, int n){
 }
 int prefix(vector<int> &BIT, int idx){
 	int ans = 0;
+	//every parent has lsb number of consecutively smaller children(including itself)
+	//thats why this works
 	while(idx>0){
 		ans += BIT[idx];
 		idx -= ((idx)&(-idx));
@@ -40,6 +42,7 @@ int32_t main(){
 	for(int i = 1; i<=n; i++){
 		cin>>a[i];
 	}
+	//always use 1 based indexing in BIT for easy implementation
 	vector<int> BIT(n+1,0);
 	//setup the initial BIT
 	for(int i = 1; i<=n; i++){

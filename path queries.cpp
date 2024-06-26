@@ -58,6 +58,7 @@ int32_t main(){
 	for(int i = 1; i<=n; i++){
 		dfs_pos[dfs_sequence[i]] = i;
 		update(BIT, i, a[dfs_sequence[i]], n);
+		update(BIT, i+sz[dfs_sequence[i]], -a[dfs_sequence[i]], n);
 	}
 
 	while(t--){
@@ -67,11 +68,12 @@ int32_t main(){
 		int s,x;
 		cin>>s>>x;
 		update(BIT, dfs_pos[s], x-a[s], n);
+		update(BIT, dfs_pos[s] + sz[s], -1*(x-a[s]), n);
 		a[s] = x;
 	} else {
 		int s;
 		cin>>s;
-		cout<<prefix(BIT, dfs_pos[s]+sz[s]-1) - prefix(BIT, dfs_pos[s]-1)<<"\n";
+		cout<<prefix(BIT, dfs_pos[s])<<"\n";
 	}
 }
 	return 0;

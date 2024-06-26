@@ -17,6 +17,7 @@ int32_t main(){
 		cin>>a[i];
 	}
 	vector<vector<int>> sparse(n+1, vector<int>(25,INT64_MAX));
+	//sparse[i][j] = min from [i i+2^j) (right non inclusive)
 	for(int i = 1; i<=n; i++){
 		sparse[i][0] = a[i];
 	}

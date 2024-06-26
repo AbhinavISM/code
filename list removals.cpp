@@ -34,21 +34,8 @@ int32_t main(){
 	while(t--){
 	int p;
 	cin>>p;
-	int lo = 1;
-	int hi = n;
-	while(hi>=lo){
-		int mid = lo + (hi-lo)/2;
-		if(prefix(BIT, mid)==p&&a[mid]!=0){
-			cout<<a[mid]<<" ";
-			a[mid] = 0;
-			update(BIT, mid, -1, n);
-			break;
-		} else if(prefix(BIT, mid)>=p){
-			hi = mid - 1;
-		} else {
-			lo = mid + 1;
-		}
-	}
+	cout<<a[prefix(BIT,p)]<<" ";
+	update(BIT,prefix(BIT, p),-1,n);
 }
 	return 0;
 }
