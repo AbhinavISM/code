@@ -11,27 +11,33 @@ using namespace std;
 bool cmp (pair<int , int> &one, pair<int , int> &two){
     //decreasing order by first value of pair
     //increasing order by second value of pair  
-    if(one.first > two.first){
-        return true;
-    } else if(one.first < two.first){
-        return false;
-    } else {
-        if(one.second < two.second){
-            return true;
-        } else {
-            return false;
-        }
-    }
+    if(one.first!=two.first) return one.first>two.first;
+    else one.second<two.second;
 }
 struct CustomComparator {
     bool operator()(const std::pair<int, int>& a, const std::pair<int, int>& b) const {
         // Sorting in decreasing order by the first value (a.first) and increasing order by the second value (a.second)
-        if (a.first == b.first) {
-            return a.second < b.second;
-        }
-        return a.first > b.first;
+        if(a.first!=b.first) return a.first>b.first;
+        else a.second<b.second;
     }
 };
+
+//very important ternary search
+//find max in upward pointing parabola
+int ternary_search(int l, int r) {
+    int eps = 0;              //set the error limit here
+    while (r - l > eps) {
+        int m1 = l + (r - l) / 3;
+        int m2 = r - (r - l) / 3;
+        int f1 = f(m1);      //evaluates the function at m1
+        int f2 = f(m2);      //evaluates the function at m2
+        if (f1 < f2)
+            l = m1;
+        else
+            r = m2;
+    }
+    return f(l);             //return the maximum of f(x) in [l, r]
+}
 
 //GRAPH INPUT
 int n,m;
@@ -42,6 +48,14 @@ for(int i = 0; i<m; i++){
     cin>>u>>v;
     adj[u-1].push_back(v-1);
     adj[v-1].push_back(u-1);
+}
+
+// moving all 8 adjacent coordinates
+int dx[] = {0, 0, 1, -1, -1, -1, 1, 1};
+int dy[] = {1, -1, 0, 0, -1, 1, -1, 1};
+for(int i=0; i<8; i++){
+    int rx = x+dx[i];
+    int ry = y+dy[i];
 }
 
 // BFS
@@ -74,12 +88,49 @@ void toposort(vector<bool> &vis, vector<int> &topo, vector<vector<int>> &adj, in
     topo.push_back(node);
 }
 
-// moving all 8 adjacent coordinates
-int dx[] = {0, 0, 1, -1, -1, -1, 1, 1};
-int dy[] = {1, -1, 0, 0, -1, 1, -1, 1};
-for(int i=0; i<8; i++){
-    int rx = x+dx[i];
-    int ry = y+dy[i];
+//Dijkstra
+vector<bool> vis(n,0);
+vector<int> cost(n,INT64_MAX);
+cost[0] = 0;
+priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+pq.push({0,0});
+while(!pq.empty()){
+    int node = pq.top().second;
+    pq.pop();
+    if(vis[node]){
+        continue;
+    }
+    vis[node] = true;
+    for(auto it : adj[node]){
+        if(!vis[it.second]&&cost[node] + it.first < cost[it.second]){
+            cost[it.second] = cost[node] + it.first;
+            pq.push({cost[it.second], it.second});
+        }
+    }
+}
+
+//BELLMAN FORD
+vector<int> dp(n,1e9);
+dp[s]=0; 
+for(int i=1; i<=n-1; i++){
+    for(auto e: edges){
+        int u=e.first;
+        int v=e.second.first;
+        int w=e.second.second;
+        if(dp[u]+w <dp[v]){   // relaxation
+            dp[v]=dp[u]+w;
+        }
+    }
+}
+
+//FLOYD WARSHALL
+dp[i][j] = shortest distance from node i to node j 
+for(int k=0; k<n; k++){
+    for(int i=0; i<n; i++){   
+        for(int j=0; j<n; j++){
+            dp[i][j]  = min(dp[i][j], dp[i][k] + dp[k][j]);
+        }
+    }
 }
 
 //DSU
@@ -229,3 +280,9 @@ int32_t main(){
 
 // SPARSE TABLE RANGE SUM (SAME AS BINARY LIFTING) (SEARCH THIS NAME!)
 // BIT / Fenwick Tree (dynamic range sum queries) (SEARCH THIS NAME!)
+
+// SEGMENT TREE (DYNAMIC RANGE MINIMUM QUERIES)
+
+// HashMaps implementation.cpp
+// Priority Queue Implementation.cpp (Heaps)
+// BST implementation.cpp
