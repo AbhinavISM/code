@@ -9,18 +9,9 @@ struct project {
 	int p;
 };
 bool cmp(project &first, project &second){
-	if(first.a==second.a){
-		if(first.b<=second.b){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	if(first.a<second.a){
-		return true;
-	} else {
-		return false;
-	}
+	if(first.b!=second.b) return first.b<second.b;
+	if(first.a!=second.a) return first.a<second.a;
+	else return first.p<second.p;
 }
 int32_t main(){
 	fast_io;
@@ -37,21 +28,23 @@ int32_t main(){
 	}
 	sort(array.begin(), array.end(), cmp);
 	vector<int> dp(n+1,0);
-	for(int i = n-1; i>=0; i--){
-		int lo = i+1;
-		int hi = n-1;
-		int ans = n;
+	dp[0] = array[0].p;
+	for(int i = 1; i<n; i++){
+		int lo = 0;
+		int hi = i-1;
+		int ans = -1;
 		while(lo<=hi){
 			int mid = lo + (hi-lo)/2;
-			if(array[mid].a>array[i].b){
-				ans = min(ans, mid);
-				hi = mid - 1;
-			} else {
+			if(array[mid].b<array[i].a){
+				ans = max(ans, mid);
 				lo = mid + 1;
+			} else {
+				hi = mid - 1;
 			}
 		}
-		dp[i] = max(dp[ans] + array[i].p, dp[i+1]);
+		if(ans!=-1) dp[i] = max(dp[ans] + array[i].p, dp[i-1]);
+		else dp[i] = max(array[i].p, dp[i-1]);
 	}
-	cout<<dp[0];
+	cout<<dp[n-1];
 	return 0;
 }

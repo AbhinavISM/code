@@ -8,8 +8,8 @@ using namespace std;
 
 int32_t main(){
 	fast_io;
-	int n,m;
-	cin>>n>>m;
+	int n,m,k;
+	cin>>n>>m>>k;
 	vector<vector<pair<int,int>>> adj(n,vector<pair<int,int>>());
 	for(int i = 0; i<m; i++){
 		int u,v,w;
@@ -17,10 +17,9 @@ int32_t main(){
 		adj[u-1].push_back({v-1,w});
 		adj[v-1].push_back({u-1,w});
 	}
-	vector<vector<int>> cost(n, vector<int>(2,INT64_MAX));
-	vector<vector<bool>> vis(n, vector<bool>(2,false));
+	vector<vector<int>> cost(n, vector<int>(k+1,INT64_MAX));
+	vector<vector<bool>> vis(n, vector<bool>(k+1,false));
 	cost[0][0] = 0;
-	cost[0][1] = 0;
 	priority_queue<pair<int,pair<int,int>>, vector<pair<int,pair<int,int>>>, greater<pair<int,pair<int,int>>>> pq;
 	pq.push({0,{0,0}});
 	while(!pq.empty()){
@@ -36,11 +35,11 @@ int32_t main(){
 		for(auto it : adj[nodeNum]){
 			int chlid = it.first;
 			int edgeWt = it.second;
-			if(used==0){
-				if(nodeCost + edgeWt/2 < cost[chlid][1]){
-					cost[chlid][1] = nodeCost + edgeWt/2;
-					if(!vis[chlid][1]){
-						pq.push({cost[chlid][1],{chlid,1}});
+			if(used<k){
+				if(nodeCost < cost[chlid][used+1]){
+					cost[chlid][used+1] = nodeCost;
+					if(!vis[chlid][used+1]){
+						pq.push({cost[chlid][used+1],{chlid,used+1}});
 					}
 				}
 			}
@@ -52,5 +51,13 @@ int32_t main(){
 			}
 		}
 	}
-	cout<<min(cost[n-1][0], cost[n-1][1]);
+	vector<int> ans;
+	for(int i = 0; i<n; i++){
+		int mini = INT64_MAX;
+		for(int j = 0; j<=k; j++){
+			mini = min(mini, cost[i][j]);
+		}
+		ans.push_back(mini);
+	}
+	peek(ans)
 }
