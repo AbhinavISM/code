@@ -39,18 +39,17 @@ int32_t main(){
 	for(int i = 0; i<n; i++){
 		if(vis[i]==0){
 			auto tulu = dfs(adj,vis,parent,i);
+			vector<int> ans;
 			if(tulu.first){
-				stack<int> path;
-				path.push(tulu.second);
-				path.push(parent[path.top()]);
-				while(path.top()!=tulu.second){
-					path.push(parent[path.top()]);
+				int node = tulu.second;
+				while(parent[node]!=tulu.second){
+					ans.push_back(node+1);
+					node = parent[node];
 				}
-				cout<<path.size()<<"\n";
-				while(!path.empty()){
-					cout<<path.top()+1<<" ";
-					path.pop();
-				}
+				ans.push_back(node+1);
+				ans.push_back(parent[node]+1);
+				cout<<ans.size()<<"\n";
+				peek(ans)
 				return 0;
 			}
 		}		

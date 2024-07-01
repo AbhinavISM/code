@@ -19,19 +19,20 @@ int32_t main(){
 	vector<bool> vis(n,0);
 	vector<int> cost(n,INT64_MAX);
 	cost[0] = 0;
-	priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+	priority_queue<pair<int, int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
 	pq.push({0,0});
 	while(!pq.empty()){
+		int nodeCost = pq.top().first;
 		int node = pq.top().second;
 		pq.pop();
-		if(vis[node]){
-			continue;
-		}
+		if(vis[node]) continue;
 		vis[node] = true;
 		for(auto it : adj[node]){
-			if(!vis[it.second]&&cost[node] + it.first < cost[it.second]){
-				cost[it.second] = cost[node] + it.first;
-				pq.push({cost[it.second], it.second});
+			int child = it.second;
+			int edgeWt = it.first;
+			if(!vis[child]&&cost[child]>nodeCost + edgeWt){
+				cost[child] = nodeCost + edgeWt;
+				pq.push({cost[child],child});
 			}
 		}
 	}

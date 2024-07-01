@@ -5,143 +5,76 @@
 #define peek(v) for(auto x:v) cout<<x<<" ";cout<<"\n";
 #define dpeek(v) for(vector<int> i : v) {for(int j : i){ cout<<j<<" ";} cout<<"\n";}
 using namespace std;
-
-void level_bfs(vector<vector<int>> &adj, vector<int> &dis, int root){
-	queue<int> q;
-	q.push(root);
-	dis[root] = 0;
-	while(!q.empty()){
-	    int node = q.front();
-	    q.pop();
-	    for(int child : adj[node]){
-	        if(dis[child]==INT_MAX){
-	            dis[child] = dis[node] + 1;
-	            q.push(child);
-	        }
-	    }
+void fillSparse(vector<vector<int>> &adj, vector<vector<int>> &sparse, vector<int> &par, vector<bool> &vis, int &n, int i){
+	if(i!=0){
+		sparse[i][0] = par[i];
+		for(int j = 1; j<20; j++){
+			if(sparse[i][j-1]!=-1) sparse[i][j] = sparse[sparse[i][j-1]][j-1];
+			else sparse[i][j-1] = -1;
+		}
+	}
+	vis[i] = true;
+	for(int child : adj[i]){
+		if(!vis[child]) fillSparse(adj,sparse,par,vis,n,child);
 	}
 }
-
-void binlift_dfs(vector<vector<int>> &adj, vector<vector<int>> &binlift,
-	int x, int par, int node){
-	// we dont need vis array as it is a tree and we have immediate parent(p)
-		binlift[node][0] = par;
-		for(int i = 1; i<=x; i++){
-			if(binlift[node][i-1]!=-1) {
-				binlift[node][i] = binlift[binlift[node][i-1]][i-1];
-			} else {
-				binlift[node][i] = -1;
-			}
-		}
+void dfs(vector<vector<int>> &adj, vector<bool> &vis, int node, vector<int> &par, vector<int> &levels, int lvl){
+	vis[node] = true;
+	levels[node] = lvl;
 	for(int child : adj[node]){
-		if(child!=par){
-			binlift_dfs(adj,binlift,x,node,child);
+		if(!vis[child]) {
+			par[child] = node;
+			dfs(adj, vis, child, par, levels, lvl+1);
 		}
 	}
 }
-
-int lift_node(int node, int jmp, int x, vector<vector<int>> &binlift){
-	for(int j = 0; j<=x; j++){
-		if((1ll<<j)&jmp){
-			node = binlift[node][j];
-			if(node==-1){break;}
-		}
+int binLift(int a, int x, vector<vector<int>> &sparse){
+	for(int i = 0; i<20; i++){
+		if(x&(1<<i)) a = sparse[a][i];
+		if(a==-1) break;
 	}
-	return node;
+	return a;
 }
-
-// O(logn*logn) per query
-int LCA1 (int u, int v, int x, vector<vector<int>> &binlift,
-	vector<int> &level){
-
-	// bring u and v to the same level
-	if(level[u]<level[v]){
-		v = lift_node(v,level[v] - level[u],x,binlift);
+int lca(int a, int b, vector<vector<int>> &sparse, vector<int> &levels){
+	if(levels[a]>=levels[b]){
+		a = binLift(a,levels[a]-levels[b], sparse);
 	} else {
-		u = lift_node(u,level[u] - level[v],x,binlift);
+		b = binLift(b,levels[b]-levels[a], sparse);
 	}
-	
-	if(u==v){
-		return u;
-	}
-
-	int lo = 0;
-	//putting this limit on 'hi' will make sure that we do not get
-	// -1 as node when calling lift_node
-	int hi = level[u];
-	int ans;
-	while(hi>=lo){
-		int mid = lo + (hi-lo)/2;
-		int p1 = lift_node(u,mid,x,binlift);
-		int p2 = lift_node(v,mid,x,binlift);
-		if(p1==p2){
-			hi = mid - 1;
-			ans = mid;
-		} else {
-			lo = mid + 1;
+	if(a==b) return a;
+	for(int i = 19; i>=0; i--){
+		if(sparse[a][i]!=sparse[b][i]){
+			a = sparse[a][i];
+			b = sparse[b][i];
 		}
 	}
-	return lift_node(u,ans,x,binlift);
-}
-//O(logn) per query
-int LCA2 (int u, int v, int x, vector<vector<int>> &binlift,
-	vector<int> &level){
-
-	// bring u and v to the same level
-	if(level[u]<level[v]){
-		v = lift_node(v,level[v] - level[u],x,binlift);
-	} else {
-		u = lift_node(u,level[u] - level[v],x,binlift);
-	}
-
-	if(u==v){
-		return u;
-	}
-
-	for(int i = x; i>=0; i--){
-		if(binlift[u][i] != binlift[v][i]){
-			u = binlift[u][i];
-			v = binlift[v][i];
-		}
-	}
-
-	return binlift[u][0];
-}
-int node_dis(int u, int v, int x, vector<vector<int>> &binlift,
-	vector<int> &level){
-	return level[u] + level[v] - 2*level[LCA2(u,v,x,binlift,level)];
+	return sparse[a][0];
 }
 int32_t main(){
 	fast_io;
 	int n,q;
 	cin>>n>>q;
-	vector<vector<int>> adj(n+1,vector<int>());
-	for(int i = 2; i<=n; i++){
+	vector<vector<int>> adj(n,vector<int>());
+	for(int i = 0; i<n-1; i++){
 	    int u,v;
 	    cin>>u>>v;
-	    adj[u].push_back(v);
-	    adj[v].push_back(u);
+	    adj[u-1].push_back(v-1);
+	    adj[v-1].push_back(u-1);
 	}
 
-	int x = 0; // there will be atmax 2^x jump at once
-	int tmp = n;
-	while(tmp!=0){
-		tmp/=2;
-		x++;
-	}
+	vector<bool> vis(n, false);
+	vector<int> par(n, -1);
+	vector<int> levels(n, 0);
+	dfs(adj, vis, 0, par, levels, 0);
 
-	vector<vector<int>> binlift(n+1,vector<int>(x+1,-1));
-
-	binlift_dfs(adj,binlift,x,-1,1);
-
-	vector<int> level(n+1,INT_MAX);
-	level_bfs(adj,level,1);
-	// peek(level)
-
+	vis = vector<bool>(n, false);
+	vector<vector<int>> sparse(n,vector<int>(20,-1));
+	fillSparse(adj, sparse, par, vis, n, 0);
 	while(q--){
 		int a,b;
 		cin>>a>>b;
-		cout<<node_dis(a,b,x,binlift,level)<<"\n";
+		a--;b--;
+		cout<<levels[a]+levels[b]-2*levels[lca(a,b,sparse,levels)]<<"\n";
 	}
 	return 0;
 }

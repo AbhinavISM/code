@@ -39,7 +39,7 @@ int32_t main(){
 	    cin>>u>>v;
 	    adj[u-1].push_back(v-1);
 	}
-
+ 
 	vector<bool> vis(n,false);
 	stack<int> topo;
 	for(int i = 0; i<n; i++){
@@ -47,14 +47,14 @@ int32_t main(){
 			toposort(adj,i,vis,topo);
 		}
 	}
-
+ 
 	vector<vector<int>> newadj(n,vector<int>());
     for(int i = 0; i<n; i++){
         for(int child : adj[i]){
             newadj[child].push_back(i);
         }
     }
-
+ 
     vis = vector<bool>(n,false);
     vector<vector<int>> scc;
     vector<int> component;
@@ -67,7 +67,7 @@ int32_t main(){
         if(component.size()>0)scc.push_back(component);
         component = vector<int>();
     }
-
+ 
     vector<int> sccarr(n);
     int scccnt = 0;
     for(auto it : scc){
@@ -76,7 +76,7 @@ int32_t main(){
         }
         scccnt++;
     }
-
+ 
     vector<vector<int>> dag(scccnt, vector<int>());
     for(int i = 0; i<n; i++){
         for(int child : adj[i]){
@@ -85,12 +85,12 @@ int32_t main(){
             }
         }
     }
-
+ 
     vector<int> dagcoins(scccnt,0);
     for(int i = 0; i<n; i++){
     	dagcoins[sccarr[i]] += coins[i];
     }
-
+ 
     vector<bool> dagvis(scccnt, false);
     stack<int> dagtopo;
     for(int i = 0; i<scccnt; i++){
@@ -98,14 +98,14 @@ int32_t main(){
 		    toposort(dag,i,dagvis,dagtopo);    		    	
 	    }
     }
-
+ 
     vector<int> revdagtopo;
     while(!dagtopo.empty()){
     	revdagtopo.push_back(dagtopo.top());
     	dagtopo.pop();
     }
     reverse(revdagtopo.begin(), revdagtopo.end());
-
+ 
     vector<int> dp(scccnt,0);
     for(int node : revdagtopo){
     	for(int child : dag[node]){

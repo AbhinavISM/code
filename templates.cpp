@@ -278,11 +278,12 @@ int32_t main(){
 // DISTANCE BTW NODES QUERIES
 // -> DISTANCE QUERIES
 
+// REROOTING (TREE DISTANCES 1 AND 2)
 // SPARSE TABLE RANGE SUM (SAME AS BINARY LIFTING) (SEARCH THIS NAME!)
 // BIT / Fenwick Tree (dynamic range sum queries) (SEARCH THIS NAME!)
-
 // SEGMENT TREE (DYNAMIC RANGE MINIMUM QUERIES)
 
 // HashMaps implementation.cpp
 // Priority Queue Implementation.cpp (Heaps)
 // BST implementation.cpp
+// Tries implementation.cpp

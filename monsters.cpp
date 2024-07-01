@@ -4,7 +4,10 @@
 #define fast_io  ios_base::sync_with_stdio(false);  cin.tie(NULL); cout.tie(NULL);
 #define peek(v) for(auto x:v) cout<<x<<" ";cout<<"\n";
 #define dpeek(v) for(vector<int> i : v) {for(int j : i){ cout<<j<<" ";} cout<<"\n";}
+#define in_range(x,y,r,c) x<r&&x>=0&&y<c&&y>=0
 using namespace std;
+int dx[4] = {1,-1,0,0};
+int dy[4] = {0,0,1,-1};
 int32_t main(){
 	fast_io;
 	int n,m;
@@ -14,33 +17,29 @@ int32_t main(){
 		cin>>matrix[i];
 	}
 	pair<int,int> goodSource;
-	vector<vector<vector<pair<int,int>>>> adj(n+1,vector<vector<pair<int,int>>>(m+1,vector<pair<int,int>>()));
+	queue<pair<int,int>> q;
+	vector<vector<int>> distance(n+1,vector<int>(m+1,INT64_MAX));
 	for(int i = 0; i<n; i++){
 		for(int j = 0; j<m; j++){
-			if(i!=0&&matrix[i-1][j]!='#') adj[i][j].push_back({i-1,j});
-			if(j!=0&&matrix[i][j-1]!='#') adj[i][j].push_back({i,j-1});
-			if(i!=n-1&&matrix[i+1][j]!='#') adj[i][j].push_back({i+1,j});
-			if(j!=m-1&&matrix[i][j+1]!='#') adj[i][j].push_back({i,j+1});
 			if(matrix[i][j]=='M'){
-				adj[n][m].push_back({i,j});
+				q.push({i,j});
+				distance[i][j] = 0;
 			}
 			if(matrix[i][j]=='A'){
 				goodSource = {i,j};
 			}
 		}
 	}
-	queue<pair<int,int>> q;
-	vector<vector<int>> distance(n+1,vector<int>(m+1,INT64_MAX));
-	q.push({n,m});
-	distance[n][m] = -1;
 	while(q.size()!=0){
 		int a = q.front().first;
 		int b = q.front().second;
 		q.pop();
-		for(auto it : adj[a][b]){
-			if(distance[it.first][it.second]==INT64_MAX){
-				distance[it.first][it.second] = distance[a][b]+1;
-				q.push(it);
+		for(int i = 0; i<4; i++){
+			int tx = a + dx[i];
+			int ty = b + dy[i];
+			if(in_range(tx,ty,n,m)&&matrix[tx][ty]!='#'&&distance[tx][ty]==INT64_MAX){
+				distance[tx][ty] = distance[a][b]+1;
+				q.push({tx,ty});
 			}
 		}
 	}
@@ -58,11 +57,13 @@ int32_t main(){
 			finalNode = {a,b};
 			break;
 		}
-		for(auto it : adj[a][b]){
-			if(distance[it.first][it.second]>distance[a][b] + 1){
-				distance[it.first][it.second] = distance[a][b]+1;
-				q.push(it);
-				parent[it.first][it.second] = {a,b};
+		for(int i = 0; i<4; i++){
+			int tx = a + dx[i];
+			int ty = b + dy[i];
+			if(in_range(tx,ty,n,m)&&matrix[tx][ty]!='#'&&distance[tx][ty]>distance[a][b]+1){
+				distance[tx][ty] = distance[a][b]+1;
+				q.push({tx,ty});
+				parent[tx][ty] = {a,b};
 			}
 		}
 	}

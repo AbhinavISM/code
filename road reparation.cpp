@@ -5,36 +5,31 @@
 #define peek(v) for(auto x:v) cout<<x<<" ";cout<<"\n";
 #define dpeek(v) for(vector<int> i : v) {for(int j : i){ cout<<j<<" ";} cout<<"\n";}
 using namespace std;
-vector<int> par(100001);
-vector<int> rnk(100001);
+vector<int> par;
+vector<int> sz;
 void make_set(int n){
-	for(int i = 0; i<=n; i++){
-		par[i] = i;
-		rnk[i] = 1;
+	for(int i = 0; i<n; i++){
+		par.push_back(i);
+		sz.push_back(1);
 	}
 }
-int find_set(int a){
-	if(par[a]==a){
-		return a;
-	}
-	par[a] = find_set(par[a]);
-	return par[a];
+int find_set(int u){
+	if(par[u]==u) return u;
+	return par[u] = find_set(par[u]);
 }
-
-void union_set(int a, int b){
-	int p1 = find_set(a);
-	int p2 = find_set(b);
-	if(p1==p2){
-		return;
-	}
-	if(rnk[p1]>=rnk[p2]){
+void union_set(int u, int v){
+	int p1 = find_set(u);
+	int p2 = find_set(v);
+	if(p1==p2) return;
+	if(sz[p1]>=sz[p2]) {
+		sz[p1] += sz[p2];
 		par[p2] = p1;
-		rnk[p1] += rnk[p2];
 	} else {
+		sz[p2] += sz[p1];
 		par[p1] = p2;
-		rnk[p2] += rnk[p1];
 	}
 }
+ 
 int32_t main(){
 	fast_io;
 	int n,m;
@@ -48,23 +43,16 @@ int32_t main(){
 	sort(edges.begin(), edges.end());
 	make_set(n);
 	int ans = 0;
-	for(int i = 0; i<m; i++){
-		int u = edges[i].second.first;
-		int v = edges[i].second.second;
-		int pu = find_set(u);
-		int pv = find_set(v);
-		if(pu!=pv){
-			union_set(pu,pv);
-			ans += edges[i].first;
-		}
+	int cnt = 0;
+	for(auto e : edges){
+		int c = e.first;
+		int u = e.second.first;
+		int v = e.second.second;
+		if(find_set(u)==find_set(v)) continue;
+		union_set(u,v);
+		ans += c;
+		cnt++;
 	}
-	set<int> parents;
-	for(int i = 1; i<=n; i++){
-		parents.insert(find_set(i));
-	}
-	if(parents.size()>1){
-		cout<<"IMPOSSIBLE";
-	} else {
-		cout<<ans;		
-	}
+	if(cnt==n-1) cout<<ans;
+	else cout<<"IMPOSSIBLE";
 }

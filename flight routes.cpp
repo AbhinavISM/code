@@ -18,32 +18,26 @@ int32_t main(){
 	}
 	multiset<int> s;
 	for(int i = 0; i<k; i++){
-		s.insert(INT_MAX);
+		s.insert(INT64_MAX);
 	}
 	vector<multiset<int>> cost(n,s);
 	cost[0].erase(cost[0].begin());
 	cost[0].insert(0);
-	vector<bool> vis(n,0);
-	priority_queue<pair<multiset<int>,int>, vector<pair<multiset<int>,int>>, greater<pair<multiset<int>,int>>> pq;
-	pq.push({cost[0],0});
+	priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+	pq.push({*cost[0].begin(),0});
 	while(!pq.empty()){
 		int node = pq.top().second;
+		int nodeCost = pq.top().first;
 		pq.pop();
-		if(vis[node]){
-			continue;
-		}
-		vis[node] = true;
+		//this if condition is only for speed up, its correct even if you remove it.
+		if(*(cost[node].rbegin()) < nodeCost) continue;
 		for(auto it : adj[node]){
 			int edgeCost = it.first;
 			int child = it.second;
-			for(int c : cost[node]){
-				if(c + edgeCost < *(cost[child].rbegin())){
-					cost[child].erase(--(cost[child].end()));
-					cost[child].insert(c + edgeCost);
-					if(!vis[child]){
-						pq.push({cost[child], child});
-					}
-				}
+			if(nodeCost + edgeCost < *(cost[child].rbegin())){
+				cost[child].erase(--(cost[child].end()));
+				cost[child].insert(nodeCost + edgeCost);
+				pq.push({nodeCost + edgeCost, child});
 			}
 		}
 	}

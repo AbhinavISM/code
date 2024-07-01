@@ -5,38 +5,26 @@
 #define peek(v) for(auto x:v) cout<<x<<" ";cout<<"\n";
 #define dpeek(v) for(vector<int> i : v) {for(int j : i){ cout<<j<<" ";} cout<<"\n";}
 using namespace std;
-void dfs(int n, vector<vector<int>> &adj, vector<int> &dis){
-	for(int c : adj[n]){
-		if(dis[c]==INT_MAX){
-			dis[c] = dis[n] + 1;
-			dfs(c,adj,dis);
+int fans = 0;
+pair<int,int> dfs(int node, vector<vector<int>> &adj, vector<int> &vis){
+	vis[node] = true;
+	int maxi = 0;
+	int secmaxi = 0;
+	for(int c : adj[node]){
+		if(!vis[c]){
+			auto it = dfs(c,adj,vis);
+			if(it.first+1>maxi){
+				secmaxi = maxi;
+				maxi = it.first+1;
+			} else if(it.first+1>secmaxi){
+				secmaxi = it.first+1;
+			}
 		}
 	}
+	fans = max(fans, maxi + secmaxi);
+	return {maxi, secmaxi};
 }
-int tree_diameter(int n, vector<vector<int>> &adj){
-	vector<int> dis(n,INT_MAX);
-	dis[0] = 0;
-	dfs(0,adj,dis);
-	
-	int newsrc;
-	int maxdis = 0;
-	for(int i = 0; i<n; i++){
-		maxdis = max(maxdis, dis[i]);
-		if(maxdis==dis[i]){
-			newsrc = i;
-		}
-	}
 
-	dis = vector<int>(n,INT_MAX);
-	dis[newsrc] = 0;
-	dfs(newsrc,adj,dis);
-	
-	int diam = 0;
-	for(int i = 0; i<n; i++){
-		diam = max(diam, dis[i]);
-	}
-	return diam;
-}
 int32_t main(){
 	fast_io;
 	int n;
@@ -48,6 +36,8 @@ int32_t main(){
 	    adj[u-1].push_back(v-1);
 	    adj[v-1].push_back(u-1);
 	}
-	cout<<tree_diameter(n,adj);
+	vector<int> vis(n, false);
+	auto ans = dfs(0,adj,vis);
+	cout<<fans;
 	return 0;
 }

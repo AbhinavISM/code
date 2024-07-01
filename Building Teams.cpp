@@ -16,30 +16,26 @@ int32_t main(){
 		a[f1-1].push_back(f2-1);
 		a[f2-1].push_back(f1-1);
 	}
-	stack<int> s;
-	for(int i = 0; i<n; i++){
-		s.push(i);
-	}
 	vector<int> team(n,0);
-	int currteam = 1;
 	bool good = true;
-	while(!s.empty()){
-		int node = s.top();
-		s.pop();
-		if(team[node]!=0){
-			currteam = team[node];
-		} else {
-			team[node] = currteam;			
-		}
-		currteam = 3-currteam;
-		for(int child : a[node]){
-			if(team[child]==0){
-				s.push(child);
-				team[child] = currteam;
-			} else if(team[child]==team[node]){
-				good = false;
-				cout<<"IMPOSSIBLE";
-				return 0;
+	for(int i = 0; i<n; i++){
+		if(team[i]!=0) continue;
+		stack<int> s;
+		s.push(i);
+		team[i] = 1;
+		while(!s.empty()){
+			int node = s.top();
+			s.pop();
+			int currteam = team[node];
+			for(int child : a[node]){
+				if(team[child]==0){
+					s.push(child);
+					team[child] = 3-currteam;
+				} else if(team[child]==team[node]){
+					good = false;
+					cout<<"IMPOSSIBLE";
+					return 0;
+				}
 			}
 		}
 	}

@@ -2,14 +2,10 @@
 using namespace std;
 
 class PriorityQueue {
-    // Declare the data members here
     vector<int> pq;
     public:
     PriorityQueue() {
-        // Implement the constructor here
     }
-
-    /**************** Implement all the public functions here ***************/
 
     void insert(int element) {
         pq.push_back(element);
