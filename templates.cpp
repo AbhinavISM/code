@@ -284,6 +284,6 @@ int32_t main(){
 // SEGMENT TREE (DYNAMIC RANGE MINIMUM QUERIES)
 
 // HashMaps implementation.cpp
-// Priority Queue Implementation.cpp (Heaps)
+// Priority Queue Implementation.cpp (Heaps - Heapsort - Heapify)
 // BST implementation.cpp
 // Tries implementation.cpp

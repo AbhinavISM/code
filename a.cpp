@@ -1,29 +1,41 @@
 #include<bits/stdc++.h>
-#define int long long
+#define ll long long
 #define ld long double
-#define pii pair<int,int>
+#define pii pair<ll,ll>
 #define fast_io  ios_base::sync_with_stdio(false);  cin.tie(NULL); cout.tie(NULL);
 #define peek(v) for(auto x:v) cout<<x<<" ";cout<<"\n";
-#define dpeek(v) for(vector<int> i : v) {for(int j : i){ cout<<j<<" ";} cout<<"\n";}
+#define dpeek(v) for(vector<ll> i : v) {for(ll j : i){ cout<<j<<" ";} cout<<"\n";}
 #define in_range(x, y, r, c) (x >= 0 && x < r && y >= 0 && y < c)
 using namespace std;
+#define ll long long
+class Node{
+    int f;
+    vector<pii> cost;
+    vector<Node*> children;
+    Node(){
+        f = 0;
+        cost=  vector<pii>();
+        children = vector<Node*>(26, NULL);
+    }
+};
+class Solution {
+public:
+    int minimumCost(string target, vector<string>& words, vector<int>& costs) {
+        
+    }
+};
 
-int32_t main(){
+int main(){
     fast_io;
-    int t;
+    ll t;
     cin>>t;
     while(t--){
-    int n;
+    ll n;
     cin>>n;
-    vector<int> a(n,0);
-    for(int i = 0; i<n; i++){
+    vector<ll> a(n,0);
+    for(ll i = 0; i<n; i++){
         cin>>a[i];
     }
-    int maxi = 0;
-    for(int i = 0; i<n; i++){
-        maxi=max(maxi,a[i]+i);      
-    }
-    cout<<maxi<<"\n";
 }
     return 0;
 }

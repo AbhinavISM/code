@@ -47,7 +47,7 @@ class ourmap {
     }
 
     V getValue(string key) {
-        int bucketIndex = getBucketIndex(string key);
+        int bucketIndex = getBucketIndex(key);
         MapNode<V>* head = buckets[bucketIndex];
         while (head != NULL) {
             if (head->key == key) {

@@ -7,7 +7,6 @@
 using namespace std;
 void dfs(vector<vector<int>> &adj, vector<int> &dp,
 	int node, int par){
-	dp[node] = 0;
 	for(int child : adj[node]){
 		if(child!=par){
 			dfs(adj,dp,child,node);
@@ -72,7 +71,6 @@ int32_t main(){
 	vector<int> ans(n);
  
 	dfs(adj,dp,1,-1);
-// 	peek(dp)
 	reroot(adj,dp,ans,1,-1);
 	peek(ans)
 	return 0;
