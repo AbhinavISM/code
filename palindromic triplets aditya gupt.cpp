@@ -84,11 +84,7 @@ int main()
     cin >> s;
 
     vector<ll> p = manacher(s);
-
     vector<vector<ll>> dp(n, vector<ll>(4, -1));
-
-    auto tmp = rec(n - 1, 3, s, p, dp);
-
-    cout << tmp << '\n';
+    cout<<rec(n - 1, 3, s, p, dp);
     return 0;
 }

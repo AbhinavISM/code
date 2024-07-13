@@ -45,37 +45,6 @@ bool isPalindrome(ll l, ll r, vector<ll> &p)
     return longestSz >= (r - l + 1);
 }
 
-int rec(int ind, int k, string &s, vector<ll> &p, vector<vector<ll>> &dp)
-{
-    if (k == 0)
-        return 0;
-    if (ind < 0)
-        return 0;
-    if (dp[ind][k] != -1)
-        return dp[ind][k];
-    if (k == 1)
-    {
-        auto ways = rec(ind - 1, k, s, p, dp);
-        for (int i = 0; i <= ind; i++)
-        {
-            if (isPalindrome(i, ind, p))
-            {
-                ways++;
-            }
-        }
-        return dp[ind][k] = ways;
-    }
-    auto ways = rec(ind - 1, k, s, p, dp);
-    for (int i = 0; i <= ind; i++)
-    {
-        if (isPalindrome(i, ind, p))
-        {
-            ways += rec(i - 1, k - 1, s, p, dp);
-        }
-    }
-    return dp[ind][k] = ways;
-}
-
 int main()
 {
     int n;
@@ -84,11 +53,17 @@ int main()
     cin >> s;
 
     vector<ll> p = manacher(s);
-
-    vector<vector<ll>> dp(n, vector<ll>(4, -1));
-
-    auto tmp = rec(n - 1, 3, s, p, dp);
-
-    cout << tmp << '\n';
+    vector<vector<ll>> dp(n, vector<ll>(4, 0));
+    
+    for(ll i = 0; i<n; i++){
+        for(ll k = 1; k<4; k++){
+            if(i>0) dp[i][k] = dp[i-1][k];
+            for (ll j = 0; j<=i; j++){
+                if(k==1&&isPalindrome(j, i, p)) dp[i][k]++;
+                else if(j>0&&isPalindrome(j, i, p)) dp[i][k] += dp[j-1][k-1];
+            }
+        }  
+    }
+    cout<<dp[n-1][3];
     return 0;
 }
