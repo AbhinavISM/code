@@ -19,6 +19,7 @@ vector<ll> manacher(string &s)
 
     ll l = 1, r = 1;
 
+
     for (int i = 1; i < n; i++)
     {
         p[i] = max(0ll, min(r - i, p[l + (r - i)]));

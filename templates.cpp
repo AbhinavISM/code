@@ -22,6 +22,80 @@ struct CustomComparator {
     }
 };
 
+//KMP algoritm
+class Solution {
+public:
+    int KMP(string s, string p) {
+        int n = p.size();
+        int m = s.size();
+        vector<int> lps(n);
+        lps[0] = 0;
+        for(int i = 1; i<n; i++){
+            int j = lps[i-1];
+            while(j>0&&p[i]!=p[j]){
+                j = lps[j-1];
+            }
+            if(p[i]==p[j]) j++;
+            lps[i] = j;
+        }
+        int j = 0;
+        for(int i = 0; i<m; i++){
+            if(j==n) return i-n;
+            while(j>0&&s[i]!=p[j]){
+                j = lps[j-1];
+            }
+            if(s[i]==p[j]) j++;
+        }
+        if(j==n) return m-n;
+        return -1;
+    }
+};
+
+//Rabin Karp String Hashing
+class Solution {
+public:
+    ll Rabin_Karp(string source, string target){
+        cout<<source<<" "<<target<<" ";
+        ll mod = 1000000009;
+        ll n = source.size();
+        ll m = target.size();
+
+        ll prime = 31;
+        ll primePower = 1;
+        ll targetCode = 0;
+        for(ll i = 0;i<m;i++){
+            targetCode = (targetCode+primePower*(target[i]-'a'+1))%mod;
+            primePower = (primePower*prime)%mod;
+        }
+
+        ll hashCode = 0;
+        primePower = 1;
+        //lastPrime stores the prime number s[i-m] was multipied with.
+        ll lastPrime = 1;
+        for(ll i = 0; i<m; i++){
+            hashCode = (hashCode+primePower*(source[i]-'a'+1))%mod;
+            primePower = (primePower*prime)%mod;
+        }
+        if(hashCode == targetCode){
+            if(source.substr(0,m) == target)
+                return 0;
+        }
+        for(ll i = m;i<n;i++){
+            hashCode = (hashCode+primePower*(source[i]-'a'+1))%mod;
+            primePower = (primePower*prime)%mod;
+            hashCode = ((hashCode-(source[i-m]-'a'+1)*lastPrime)%mod+mod)%mod;
+            lastPrime = (lastPrime*prime)%mod;
+            
+            //comparing with targetCode*lastPrime
+            if(hashCode == (targetCode*lastPrime)%mod){
+                if(source.substr(i-m+1,m) == target)
+                    return i-m+1;
+            }
+        }
+        return -1;
+    }
+};
+
 //very important ternary search
 //find max in upward pointing parabola
 int ternary_search(int l, int r) {
