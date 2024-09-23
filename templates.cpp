@@ -354,7 +354,7 @@ int32_t main(){
 
 // REROOTING (TREE DISTANCES 1 AND 2)
 // SPARSE TABLE RANGE SUM (SAME AS BINARY LIFTING) (SEARCH THIS NAME!)
-// BIT / Fenwick Tree (dynamic range sum queries) (SEARCH THIS NAME!)
+// BIT / Fenwick Tree (\) (SEARCH THIS NAME!)
 // SEGMENT TREE (DYNAMIC RANGE MINIMUM QUERIES)
 
 // HashMaps implementation.cpp
