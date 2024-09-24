@@ -6,6 +6,17 @@
 #define dpeek(v) for(vector<int> i : v) {for(int j : i){ cout<<j<<" ";} cout<<"\n";}
 using namespace std;
 
+//String one line input with spaces (can see john venn question)
+string s;
+getline(cin, s);
+//seperate s with sapces to get input
+stringstream ss1(s);
+vector<string> input;
+string element;
+while (ss1 >> element) {
+    input.insert(element);
+}
+
 //comparators MUST return false for equality case
 //comparators ka funda simple : jo chahiye, uske liye true return karo
 bool cmp (pair<int , int> &one, pair<int , int> &two){
