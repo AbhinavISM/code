@@ -12,27 +12,30 @@ int32_t main(){
 	fast_io;
 	int t = 1;
 	while(t--){
-		int n;
-		cin>>n;
+		int n,k;
+		cin>>n>>k;
 		vector<int> a(n,0);
 		for(int i = 0; i<n; i++){
 			cin>>a[i];
 		}
+		if(n==1&&a[0]==k) {
+			cout<<1;
+			continue;
+		}
 		int ans = 0;
-		vector<vector<int>> occurences(n+1, vector<int>());
+		vector<int> f(n,0);
+		map<int, vector<int>> mp;
 		for(int i = 0; i<n; i++){
-			occurences[a[i]].push_back(i);
+			if(i>0) f[i] = f[i-1] + a[i];
+			else f[i] = a[i];
+			mp[f[i]].push_back(i);
 		}
-		for(auto it : occurences){
-			if(it.size()==0) continue;
-			ans -= ((it[0])*(it[0]+1))/2;
-			ans -= ((n-it.back()-1)*(n-it.back()))/2;
-			for(int i = 1; i<it.size(); i++){
-				ans -= ((it[i]-it[i-1]-1)*(it[i]-it[i-1]))/2;
-			}
-			ans += (n*(n+1))/2;
+		for(auto it : mp){
+			cout<<it.first<<" : ";
+			peek(it.second)
 		}
-		cout<<ans;
+		
+		cout<<((1<<(n-1))-ans);
 	}
 	return 0;
 }
