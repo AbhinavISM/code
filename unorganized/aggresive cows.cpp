@@ -8,42 +8,38 @@ int32_t main(){
 	int t;
 	cin>>t;
 	while(t--){
-	int n;
-	cin>>n;
-	int c;
-	cin>>c;
-	vector<int> stalls(n);
-	for(int i = 0; i<n; i++){
-		int item;
-		cin>>item;
-		stalls[i] = item;
-	}
-	sort(stalls.begin(), stalls.end());
-	int lo = 1;
-	int hi = 1000000000;
-	int ans = -1;
-	while(hi>=lo){
-		int mid = lo + (hi-lo)/2;
-		int count = 1;
-		// cout<<mid<<" ";
-		int last = 0;
-		for(int i = 1; i<n; i++){
-			if(stalls[i]-stalls[last]>=mid){
-				count++;
-				last = i;
+		int n;
+		cin>>n;
+		int c;
+		cin>>c;
+		vector<int> stalls(n);
+		for(int i = 0; i<n; i++){
+			int item;
+			cin>>item;
+			stalls[i] = item;
+		}
+		sort(stalls.begin(), stalls.end());
+		int lo = 1;
+		int hi = 1000000000;
+		int ans = -1;
+		while(hi>=lo){
+			int mid = lo + (hi-lo)/2;
+			int count = 1;
+			int last = 0;
+			for(int i = 1; i<n; i++){
+				if(stalls[i]-stalls[last]>=mid){
+					count++;
+					last = i;
+				}
+			}
+			if(count>=c){
+				ans = max(ans,mid);
+				lo = mid+1;
+			} else {
+				hi = mid-1;
 			}
 		}
-		// if(mid==3){
-		// 	cout<<count;
-		// }
-		if(count>=c){
-			ans = max(ans,mid);
-			lo = mid+1;
-		} else {
-			hi = mid-1;
-		}
+		cout<<ans<<"\n";
 	}
-	cout<<ans<<"\n";
-}
 	return 0;
 }
