@@ -15,41 +15,27 @@ typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_
 //s.order_of_key(key) -> number of elements smaller than key in set
 //*s.find_by_order(idx) -> element at index idx in set
 
-class Solution {
-public:
-    int minimumDifference(vector<int>& nums) {
-        sort(nums.begin(), nums.end());
-        int n = nums.size();
-        vector<vector<int>> dp(n+1, vector<int>(n+1, INT_MAX));
-        dp[0][0] = 0;
-        for(int i = 0; i<=n; i++){
-            for(int j = 0; j<=n&&(i+j)<=n; j++){
-                if(i==0&&j==0) continue;
-                if(i==0){
-                    dp[i][j] = dp[i][j-1] - nums[i+j-1];
-                } else if(j==0){
-                    dp[i][j] = dp[i-1][j] + nums[i+j-1];
-                } else if(abs(dp[i-1][j] + nums[i+j-1]) <= abs(dp[i][j-1] - nums[i+j-1])){
-                    dp[i][j] = dp[i-1][j] + nums[i+j-1];
-                } else {
-                    dp[i][j] = dp[i][j-1] - nums[i+j-1];
-                }
-            }
-        }
-        dpeek(dp)
-        int ans = INT_MAX;
-        return abs(dp[n/2][n/2]);
+long getMinCost(int edgeDeviceCost, int inputPeripheralCost, int bundleCost, int x, int y){
+    int e = edgeDeviceCost; int i = inputPeripheralCost; int b = bundleCost;
+    long ans = 0;
+    if(e + i >= b){
+        int bb = min(x ,y);
+        ans += b*bb;
+        x -= bb;
+        y -= bb;
     }
-};
-
+    if(x>0){
+        int cost = min(e, b);
+        ans += cost*x;
+    }
+    if(y>0){
+        int cost = min(i, b);
+        ans += cost*y;
+    }
+    return ans;
+}
 int32_t main(){
     fast_io;
-        int n;
-        cin>>n;
-        vector<int> a(n,0);
-        for(int i = 0; i<n; i++){
-            cin>>a[i];
-        }
-        cout<<Solution().minimumDifference(a);
+    cout<<getMinCost(3,2,1,4,3);
     return 0;
 }

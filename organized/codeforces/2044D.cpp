@@ -27,32 +27,20 @@ int32_t main(){
 			cin>>a[i];
 		}
 
-		vector<int> ans(n,-1);
-		set<int> buff;
-		vector<int> cf(n+1,0);
-		set<int> unique;
+		vector<int> ans;
+		set<int> avail;
 		for(int i = 0; i<n; i++){
-			buff.insert(i);
-			unique.insert(a[i]);
-			int size = unique.size();
-			int need;
-			if(size>1){
-				need = (i+1)/(size) - cf[a[i]];
-				if((i+1)%size) need++;
-			}
-			else need = i/2+1 - cf[a[i]];
-			while(need>0){
-				int top = *buff.begin();
-				ans[top] = a[i];
-				cf[a[i]]++;
-				buff.erase(buff.begin());
-				need--;
-			}
+			avail.insert(i+1);	
 		}
 		for(int i = 0; i<n; i++){
-			if(ans[i]==-1) ans[i] = 1;
+			if(avail.find(a[i])!=avail.end()){
+				ans.push_back(a[i]);
+				avail.erase(a[i]);
+			} else {
+				ans.push_back(*avail.begin());
+				avail.erase(avail.begin());
+			}
 		}
-		cout<<"\n";
 		peek(ans)
 	}
 	return 0;

@@ -46,6 +46,7 @@ int32_t main(){
 			auto lb2 = lower_bound(b.begin(), b.end(), ab[i]);
 			int neg = lb1-a.begin();
 			int drop = lb2-b.begin();
+			neg -= drop;
 			if(neg<=k) ans = max(ans, (n-drop)*ab[i]);
 		}
 		cout<<ans<<"\n";
