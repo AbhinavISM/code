@@ -20,24 +20,30 @@ int32_t main(){
 	int t;
 	cin>>t;
 	while(t--){
-		int x,m;
-		cin>>x>>m;
-		int ans = 0;
-		int i = 1;
-		while(i<=x&&i<=m){
-			if((x^i)%i==0){
-				ans++;
+		int k;
+		cin>>k;
+		int x = 0;
+		int y = 0;
+		vector<vector<int>> ans;
+		for(int i = 500; i>=2; i--){
+			if((i*(i-1))/2 <= k){
+				for(int j = 0; j<i; j++){
+					ans.push_back({x,y});
+					x++;					
+				}
+				y++;
+				k -= (i*(i-1))/2;
 			}
-			i++;
 		}
-		vector<bool> xb;
-		int tx = x;
-		while(tx>0){
-			xb.push_back(tx%2);
-			tx/=2;
+		while(k>0){
+			ans.push_back({x,y});
+			x++;
+			ans.push_back({x,y});
+			y++;
+			k--;
 		}
-		
-		cout<<ans<<"\n";
+		cout<<ans.size()<<"\n";
+		dpeek(ans)
 	}
 	return 0;
 }

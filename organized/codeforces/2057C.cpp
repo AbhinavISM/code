@@ -64,8 +64,6 @@ int32_t main(){
 		reverse(lbit.begin(), lbit.end());
 		reverse(rbit.begin(), rbit.end());	
 
-		// peek(rbit) peek(lbit)
-
 		int i = 0;
 		while(lbit[i]==rbit[i]){
 			i++;

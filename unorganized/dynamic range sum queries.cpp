@@ -13,14 +13,6 @@ void update(vector<int> &BIT, int idx, int val, int n){
 		BIT[idx] += val;
 		idx += ((idx)&(-idx));
 	}
-	//another way (works too)
-	// for(int j = 0; j<33; j++){
-	// 	if(idx&(1<<j)) {
-	// 		if(idx + (1<<j) > n) break; 
-	// 		BIT[idx + (1<<j)] += val;
-	// 		idx = idx + (1<<j);
-	// 	}
-	// }
 }
 int prefix(vector<int> &BIT, int idx){
 	int ans = 0;
@@ -44,9 +36,14 @@ int32_t main(){
 	}
 	//always use 1 based indexing in BIT for easy implementation
 	vector<int> BIT(n+1,0);
-	//setup the initial BIT
+	
+	//setup the initial BIT in O(N)!!!
 	for(int i = 1; i<=n; i++){
-		update(BIT, i, a[i], n);
+		BIT[i] += a[i];
+		int p = i + (i & -i);
+		if(p<=n) {
+			BIT[p] += BIT[i];
+		}
 	}
 	// peek(BIT)
 	while(t--){

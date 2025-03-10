@@ -5,7 +5,7 @@
 #define ld long double
 #define pii pair<int,int>
 #define fast_io  ios_base::sync_with_stdio(false);  cin.tie(NULL); cout.tie(NULL);
-#define peek(v) for(auto x:v) cout<<x<<" ";cout<<"\n";
+#define peek(v) for(auto x:v) cout<<x;cout<<"\n";
 #define dpeek(v) for(auto i:v) {for(auto j:i){ cout<<j<<" ";} cout<<"\n";}
 #define in_range(x, y, r, c) (x >= 0 && x < r && y >= 0 && y < c)
 using namespace std;
@@ -20,24 +20,43 @@ int32_t main(){
 	int t;
 	cin>>t;
 	while(t--){
-		int x,m;
-		cin>>x>>m;
-		int ans = 0;
-		int i = 1;
-		while(i<=x&&i<=m){
-			if((x^i)%i==0){
-				ans++;
+		int n,m,k;
+		cin>>n>>m>>k;
+		if(abs(n-m)>k || (n<k && m<k)) {
+			cout<<-1<<"\n";
+			continue;
+		}
+		vector<int> ans;
+		bool zbig = (n>=m);
+		int i = 0; int j = 0;
+		while(i<n && j<m){
+			if(zbig){
+				int cur = 0;
+				while(i<n && cur<k){
+					ans.push_back(0);
+					i++;
+					cur++;
+				}
+				zbig = !zbig;
+			} else {
+				int cur = 0;
+				while(j<m && cur<k){
+					ans.push_back(1);
+					j++;
+					cur++;
+				}
+				zbig = !zbig;
 			}
+		}
+		while(i<n){
+			ans.push_back(0);
 			i++;
 		}
-		vector<bool> xb;
-		int tx = x;
-		while(tx>0){
-			xb.push_back(tx%2);
-			tx/=2;
+		while(j<m){
+			ans.push_back(1);
+			j++;
 		}
-		
-		cout<<ans<<"\n";
+		peek(ans)
 	}
 	return 0;
 }

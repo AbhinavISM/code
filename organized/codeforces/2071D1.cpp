@@ -14,30 +14,42 @@ typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_
 //ordered_set s;
 //s.order_of_key(key) -> number of elements smaller than key in set
 //*s.find_by_order(idx) -> element at index idx in set
-
+int solve(int l, int n, vector<int> &a, vector<int> &prexor){
+	if(l<=2*n){
+		return a[l];
+	}
+	int mid = l/2;
+	if(mid%2){
+		return prexor[n];
+	} else {
+		return prexor[n]^solve(mid, n, a, prexor);
+	}
+}
 int32_t main(){
 	fast_io;
 	int t;
 	cin>>t;
 	while(t--){
-		int x,m;
-		cin>>x>>m;
-		int ans = 0;
-		int i = 1;
-		while(i<=x&&i<=m){
-			if((x^i)%i==0){
-				ans++;
-			}
-			i++;
+		int n, l, r;
+		cin>>n>>l>>r;
+		vector<int> a(n+1,0);
+		for(int i = 1; i<=n; i++){
+			cin>>a[i];
 		}
-		vector<bool> xb;
-		int tx = x;
-		while(tx>0){
-			xb.push_back(tx%2);
-			tx/=2;
+		vector<int> prexor(n+1, 0);
+		prexor[1] = a[1];
+		for(int i=2; i<=n; i++){
+			prexor[i] = prexor[i-1]^a[i];
 		}
-		
-		cout<<ans<<"\n";
+		if(n%2==0){
+			a.push_back(prexor[n/2]);
+			prexor.push_back(prexor[n]^a[n+1]);
+			n++;
+		}
+		for(int i = 1; i<=n; i++){
+			a.push_back(prexor[(n+i)/2]);
+		}
+		cout<<solve(l, n, a, prexor)<<"\n";
 	}
 	return 0;
 }

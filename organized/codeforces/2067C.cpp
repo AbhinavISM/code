@@ -14,30 +14,34 @@ typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_
 //ordered_set s;
 //s.order_of_key(key) -> number of elements smaller than key in set
 //*s.find_by_order(idx) -> element at index idx in set
-
+bool find7(int n){
+	while(n>0){
+		if(n%10==7) return true;
+		n/=10;
+	}
+	return false;
+}
+int solve(int n){
+	if(find7(n)) return 0; 
+	vector<int> a = {9,99,999,9999,99999,999999,9999999,99999999,999999999,9999999999};
+	int ans = 7;
+	for(int i=0; i<a.size(); i++){
+		int tn = n;
+		for(int j = 1; j<=7; j++){
+			tn += a[i];
+			if(find7(tn)) ans = min(ans, j);
+		}
+	}
+	return ans;
+}
 int32_t main(){
 	fast_io;
 	int t;
 	cin>>t;
 	while(t--){
-		int x,m;
-		cin>>x>>m;
-		int ans = 0;
-		int i = 1;
-		while(i<=x&&i<=m){
-			if((x^i)%i==0){
-				ans++;
-			}
-			i++;
-		}
-		vector<bool> xb;
-		int tx = x;
-		while(tx>0){
-			xb.push_back(tx%2);
-			tx/=2;
-		}
-		
-		cout<<ans<<"\n";
+		int n;
+		cin>>n;
+		cout<<solve(n)<<"\n";
 	}
 	return 0;
 }

@@ -15,29 +15,39 @@ typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_
 //s.order_of_key(key) -> number of elements smaller than key in set
 //*s.find_by_order(idx) -> element at index idx in set
 
+//correct
+int gcd(int a, int b) {
+    if (b == 0) return a;
+    return gcd(b, a % b);
+}
 int32_t main(){
 	fast_io;
 	int t;
 	cin>>t;
 	while(t--){
-		int x,m;
-		cin>>x>>m;
-		int ans = 0;
-		int i = 1;
-		while(i<=x&&i<=m){
-			if((x^i)%i==0){
-				ans++;
+		int n,m;
+		cin>>n>>m;
+		vector<int> a(m+1,INT64_MAX);
+		for(int i = 1; i<=m; i++){
+			cin>>a[i];
+		}
+		sort(a.begin(), a.end(), greater<int>());
+		vector<int> ans = vector<int>(n+1, 1);
+		bool good = true;
+		for(int i = 1; i<=n; i++){
+			for(int j = 2*i; j<=n; j+=i){
+				if(a[ans[gcd(i, j)]]==gcd(a[ans[i]],a[ans[j]])){
+					if(ans[i]!=m) ans[j] = ans[i] + 1;
+					else good = false;
+				}
 			}
-			i++;
 		}
-		vector<bool> xb;
-		int tx = x;
-		while(tx>0){
-			xb.push_back(tx%2);
-			tx/=2;
+		if(good) {
+			for(int i = 1; i<=n; i++) cout<<a[ans[i]]<<" ";
+				cout<<"\n";
+		} else {
+			cout<<-1<<"\n";
 		}
-		
-		cout<<ans<<"\n";
 	}
 	return 0;
 }

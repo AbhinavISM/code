@@ -20,23 +20,45 @@ int32_t main(){
 	int t;
 	cin>>t;
 	while(t--){
-		int x,m;
-		cin>>x>>m;
-		int ans = 0;
-		int i = 1;
-		while(i<=x&&i<=m){
-			if((x^i)%i==0){
-				ans++;
+		int n,k;
+		cin>>n>>k;
+		string s;
+		cin>>s;
+		vector<int> a(n,0);
+		for(int i = 0; i<n; i++){
+			cin>>a[i];
+		}
+		int lo = 0;
+		int hi = 1e9;
+		int ans = INT_MAX;
+		while(hi>=lo){
+			int mid = lo + (hi-lo)/2;
+			int ops = 0;
+			bool red = true;
+			int i = 0;
+			while(i<n){
+				if(red){
+					while(i<n){
+						if(s[i]=='B' && a[i] > mid) break;
+						i++;
+					}
+					red = false;
+				} else {
+					ops++;
+					while(i<n){
+						if(s[i]=='R' && a[i] > mid) break;
+						i++;
+					}
+					red = true;
+				}
 			}
-			i++;
+			if(ops<=k){
+				ans = min(ans, mid);
+				hi = mid - 1;
+			} else {
+				lo = mid + 1;
+			}
 		}
-		vector<bool> xb;
-		int tx = x;
-		while(tx>0){
-			xb.push_back(tx%2);
-			tx/=2;
-		}
-		
 		cout<<ans<<"\n";
 	}
 	return 0;

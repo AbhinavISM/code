@@ -14,30 +14,40 @@ typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_
 //ordered_set s;
 //s.order_of_key(key) -> number of elements smaller than key in set
 //*s.find_by_order(idx) -> element at index idx in set
-
+vector<int> solve(int n, int k){	
+	if(n==1){
+		return {k};
+	}
+	if(n==2){
+		return {k,k};
+	}
+	vector<int> ans;
+	for(int i = 20; i>=1; i--){
+		if(n == (1<<i)){
+			for(int j = 0; j<n; j++){
+				ans.push_back(k);
+			}
+			return ans;
+		}
+		if(n > (1<<i)){
+			vector<int> a = solve(n%(1<<i), k);
+			ans = a;
+			for(int j = 0; j<n-2*a.size(); j++){
+				ans.push_back(0);
+			}
+			ans.insert(ans.end(), a.begin(), a.end());
+			return ans;
+		}
+	}
+}
 int32_t main(){
 	fast_io;
 	int t;
 	cin>>t;
 	while(t--){
-		int x,m;
-		cin>>x>>m;
-		int ans = 0;
-		int i = 1;
-		while(i<=x&&i<=m){
-			if((x^i)%i==0){
-				ans++;
-			}
-			i++;
-		}
-		vector<bool> xb;
-		int tx = x;
-		while(tx>0){
-			xb.push_back(tx%2);
-			tx/=2;
-		}
-		
-		cout<<ans<<"\n";
+		int n,k;
+		cin>>n>>k;
+		peek(solve(n, k));
 	}
 	return 0;
 }
